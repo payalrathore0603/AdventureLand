@@ -3,6 +3,7 @@ import MainLayout from "../componet/layouts/MainLayout";
 import SocialMedia from "../componet/pages/SocialMedia";
 import Services from "../componet/pages/Services";
 import Login from "../componet/pages/Login";
+import CreatePost from "../componet/pages/CreatePost";
 
 export const router=createBrowserRouter([
     {
@@ -22,5 +23,9 @@ export const router=createBrowserRouter([
                 element:<Login/>
             }
         ]
+    },
+    {
+        path:'/createPost',
+        element:<CreatePost/>
     }
 ])
