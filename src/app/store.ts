@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import postReducers from '../features/PostSlice'
+import postReducers from '../features/posts/PostSlice'
 
 export const store=configureStore({
     reducer:{
@@ -7,5 +7,5 @@ export const store=configureStore({
     }
 })
 
-export type RootState = ReturnType<typeof store.getState>;
+export type RootState = ReturnType<typeof store.getState>;  // return entire store
 export type AppDispatch = typeof store.dispatch;

@@ -1,5 +1,8 @@
 import { useState } from "react";
 import type { PostFormType } from "../../types/PostFormType";
+import { useAppDispatch } from "../../app/hook";
+import { addPost } from "../../features/posts/PostSlice";
+import { useNavigate } from "react-router-dom";
 
 export default function CreatePost() {
   const [form, setForm] = useState<PostFormType>({
@@ -12,6 +15,9 @@ export default function CreatePost() {
     },
     image: null,
   });
+
+  const dispatch=useAppDispatch()
+  const navigate=useNavigate();
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -32,7 +38,7 @@ export default function CreatePost() {
       } else if (name === "image") {
         setForm((prev) => ({
           ...prev,
-          image: files,
+          image: files
         }));
       }
 
@@ -59,6 +65,9 @@ export default function CreatePost() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("handle form submit", form);
+     dispatch(addPost(form))
+     navigate('/')
+    
   };
   return (
     <div className="flex justify-center items-center flex-col min-h-screen ">

@@ -4,6 +4,7 @@ import SocialMedia from "../componet/pages/SocialMedia";
 import Services from "../componet/pages/Services";
 import Login from "../componet/pages/Login";
 import CreatePost from "../componet/pages/CreatePost";
+import Signup from "../componet/pages/Signup";
 
 export const router=createBrowserRouter([
     {
@@ -20,7 +21,11 @@ export const router=createBrowserRouter([
             },
             {
                 path:"/login",
-                element:<Login/>
+                element:<Login/>,
+            },
+            {
+                path:"/signup",
+                element:<Signup/>
             }
         ]
     },

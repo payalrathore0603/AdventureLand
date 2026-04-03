@@ -1,42 +1,16 @@
 import { useNavigate } from "react-router-dom";
 import type { PostType } from "../../types/postType";
 import Post from "./PostCard";
+import type { RootState } from "../../app/store";
+import { useAppSelector } from "../../app/hook";
 
 
 
 export default function SocialMedia() {
   const navigate=useNavigate();
+  const posts =useAppSelector((store: RootState )=>store.posts.posts)
 
-  const posts = [
-  {
-    id: 1,
-    title: "Trip to Manali 🏔️",
-    description: "Amazing experience in the mountains with friends.",
-    category: "Travel",
-    image: "https://images.unsplash.com/photo-1501785888041-af3ef285b470",
-    likes: 12,
-    isLiked: false,
-    isSaved: false,
-    user: {
-      name: "Payal",
-      avatar: "https://i.pravatar.cc/150?img=1"
-    }
-  },
-  {
-    id: 2,
-    title: "Bike ride in Delhi 🏍️",
-    description: "Evening ride with cool breeze and great roads.",
-    category: "Bike",
-    image: "https://images.unsplash.com/photo-1518655048521-f130df041f66",
-    likes: 8,
-    isLiked: false,
-    isSaved: false,
-    user: {
-      name: "Rahul",
-      avatar: "https://i.pravatar.cc/150?img=2"
-    }
-  }
-];
+console.log("posts",posts)
 
 const handleCreatepost=()=>{
   navigate("/createPost")
