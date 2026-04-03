@@ -3,7 +3,7 @@ export interface PostType{
     title:string,
     description:string,
     category:string,
-    image:string,
+    image:string[],
     likes:number,
     isLiked:boolean,
     isSaved:boolean,

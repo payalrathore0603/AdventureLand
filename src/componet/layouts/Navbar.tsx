@@ -16,7 +16,7 @@ export default function Navbar() {
           <div className="md:flex md:gap-8 items-center">
               <Link className="text-gray-500 hover:text-black px-3 py-2 text-sm font-medium" to="/">SoicalMedia</Link>
               <Link className="text-gray-500 hover:text-black px-3 py-2 text-sm font-medium" to="/service">Service</Link>
-              <Link className="text-gray-500 hover:text-black px-3 py-2 text-sm font-medium" to="/login">Login</Link>
+              <Link className="text-gray-500 hover:text-black px-3 py-2 text-sm font-medium" to="/login">Login/Signup</Link>
           </div>
 
 

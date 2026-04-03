@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { PostType } from "../../types/postType";
 
 type props = {
@@ -16,6 +17,18 @@ export default function PostCard({ post }: props) {
     user,
     image,
   } = post;
+
+
+  const [currentIndexImage,setCurrentIndexImage]=useState(0);
+
+  const nextImage=()=>{
+    setCurrentIndexImage(prev=>prev===image.length - 1?0:prev +1)
+  }
+
+  const prevImage=()=>{
+    setCurrentIndexImage(prev=>prev===0?image.length -1:prev-1)
+  }
+
   console.log(id, title, description, category, likes, isLiked, isSaved, user);
   return (
     <div className=" md:w-[50%] mx-auto p-4 border-black shadow-md mb-4">
@@ -29,8 +42,15 @@ export default function PostCard({ post }: props) {
         </div>
       </div>
 
-      <div>
-        <img src={image} alt="post image" />
+      <div className="relative">
+         {/* current Image */}
+           <img src={image[currentIndexImage]} alt="post image"  />
+        {image.length > 1 && (
+          <button onClick={prevImage} className="absolute top-1/2 left-2 text-white">  ◀ </button>
+        )}
+         {image.length > 1 && (
+          <button onClick={nextImage} className="absolute top-1/2 right-2 text-white">   ▶ </button>
+        )}
       </div>
 
       <div>
