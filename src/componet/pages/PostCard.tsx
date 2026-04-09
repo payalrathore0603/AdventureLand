@@ -1,11 +1,16 @@
 import { useState } from "react";
 import type { PostType } from "../../types/postType";
+import { Heart } from "lucide-react";
+import { useAppDispatch } from "../../app/hook";
+import { likePost } from "../../features/posts/PostSlice";
 
 type props = {
   post: PostType;
 };
 
 export default function PostCard({ post }: props) {
+
+  const dispatch=useAppDispatch();
   const {
     id,
     title,
@@ -20,6 +25,18 @@ export default function PostCard({ post }: props) {
 
 
   const [currentIndexImage,setCurrentIndexImage]=useState(0);
+  const [heartColor,setHeartColor]=useState("");
+ 
+
+  const handleHeartClick=()=>{
+    if(heartColor==="white"){
+      setHeartColor("red")
+      dispatch(likePost(id))
+    }else{
+      setHeartColor("white")
+      dispatch(likePost(id))
+    }
+  }
 
   const nextImage=()=>{
     setCurrentIndexImage(prev=>prev===image.length - 1?0:prev +1)
@@ -55,10 +72,8 @@ export default function PostCard({ post }: props) {
 
       <div>
         <div className="flex justify-between">
-          <div className="flex gap-4 mt-4">
-            <span className="text-sm font-medium">
-              <i>Likes {likes}</i>{" "}
-            </span>
+          <div className="flex gap-2 mt-4">
+            <Heart className={`text-sm font-medium ${heartColor === "red" ? "bg-red-500":"bg-white"} `} onClick={handleHeartClick}/>{likes}
             <span className="text-sm font-medium">
               <i>Comments </i>
             </span>
