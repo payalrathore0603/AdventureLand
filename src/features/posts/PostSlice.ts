@@ -18,7 +18,7 @@ const initialState: PostState ={
     category: "Travel",
     image: ["https://images.unsplash.com/photo-1501785888041-af3ef285b470"],
     likes: 12,
-    isLiked: false,
+    isLiked: true,
     isSaved: false,
     user: {
       name: "Payal",
@@ -63,11 +63,25 @@ export const postSlice=createSlice({
            }
            console.log(newPost)
             state.posts.push(newPost)
+        },
+       likePost:(state,action )=>{
+        console.log("likepost start from here",action.payload)
+        const post=state.posts.find(p=>p.id===action.payload)
+        console.log("post",post)
+          if(post){
+            if(post.isLiked){
+              post.likes -=1;
+              post.isLiked=false;
+            }else{
+              post.likes +=1
+              post.isLiked=true;
+            }
+          }
         }
     }
 })
 
 
-export const {addPost} =postSlice.actions
+export const {addPost,likePost} =postSlice.actions
 
 export default postSlice.reducer 
