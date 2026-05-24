@@ -1,23 +1,47 @@
-import { useNavigate } from "react-router-dom";
-import type { PostType } from "../../types/postType";
-import Post from "./PostCard";
-import type { RootState } from "../../app/store";
-import { useAppSelector } from "../../app/hook";
+
 
 
 
 export default function SocialMedia() {
-  const navigate=useNavigate();
-  const posts =useAppSelector((store: RootState )=>store.posts.posts)
-
-console.log("posts",posts)
-
-const handleCreatepost=()=>{
-  navigate("/createPost")
-}
+  
 
   return (
-   <div className="relative  min-h-screen">
+   <>
+   </>
+  )
+}
+
+
+
+
+
+
+
+
+
+
+// import { useNavigate } from "react-router-dom";
+// import type { PostType } from "../../types/postType";
+// import Post from "./PostCard";
+
+// import type { RootState } from "../../app/store";
+// import { useAppSelector } from "../../app/hook";
+
+
+
+// const navigate=useNavigate();
+//   const posts =useAppSelector((store: RootState )=>store.posts.posts)
+
+// console.log("posts",posts)
+
+// const handleCreatepost=()=>{
+//   navigate("/createPost")
+// }
+
+
+
+
+{/* <div className="relative  min-h-screen">
 
      <div className='pt-6'>
         {posts.map((post:PostType)=>(
@@ -30,7 +54,4 @@ const handleCreatepost=()=>{
         <button onClick={handleCreatepost} className="text-2xl">+</button> 
       </div>
 
-   </div>
-
-  )
-}
+   </div> */}

@@ -1,0 +1,559 @@
+/* =========================================================================
+   1. GLOBAL RESET & BASE SETTINGS
+   ========================================================================= */
+*,
+*::after,
+*::before {
+  box-sizing: border-box; /* Ensures borders/paddings stay inside defined width/height bounds */
+}
+
+:root {
+  /* Semantic Design System Palette Mapping — Travel & Adventure Edition */
+  --color-surface-bg: #f2f5f3; /* "Alpine Mist" — Crisp, pale granite-tinted canvas backdrop */
+  --color-text-primary: #1e352f; /* "Deep Forest" — Ultra-dark canopy green for crisp readability */
+  --color-text-muted: #62726d; /* "Sage Brush" — Weathered moss grey for secondary details */
+  --color-brand-accent: #706766; /* "Canyon Clay" — High-vis terracotta orange for action items/hooks */
+  --color-surface-panel: #ffffff; /* Pure clean white for structural sidebar cards */
+
+  /* Layout Scale Anchors (Strict 8px Spatial Grid) */
+  --navbar-height: 72px; /* 9 * 8px: Standard touch-target friendly height */
+  --spacing-base: 8px; /* Modular base multiplier unit */
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-surface-bg);
+  color: var(--color-text-primary);
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+  overflow: hidden; /* Locks core viewport body from scrolling, transferring control to center feeds */
+}
+
+/* =========================================================================
+   2. PRIMARY NAVIGATION HEADER FRAMEWORK
+   ========================================================================= */
+.navbar {
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px); /* Safari engine optimization */
+
+  height: var(--navbar-height);
+  border-bottom: 1px solid rgba(58, 134, 200, 0.12);
+
+  position: fixed; /* Fixed placement locks toolbar position globally to top bounds */
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1200; /* Positions completely over mobile sliding drawer panel thresholds */
+
+  padding: 0 calc(var(--spacing-base) * 3); /* 24px outer alignment margins */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.navbar__left,
+.navbar__right {
+  display: flex;
+  align-items: center;
+  gap: calc(
+    var(--spacing-base) * 2
+  ); /* 16px functional grid element separations */
+}
+
+.navbar__logo {
+  font-size: 1.35rem;
+  font-weight: 800; /* Premium bold anchor for visual brand identity */
+  letter-spacing: -0.5px;
+  color: var(--color-text-primary);
+}
+
+.navbar__logo--accent {
+  color: var(--color-brand-accent);
+  font-weight: 400; /* Contrasts structural thin font lines against the logo header */
+}
+
+.navbar__toggel-btn {
+  background: none;
+  border: none;
+  padding: var(--spacing-base);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-nav {
+  stroke: var(--color-text-primary);
+  width: 24px;
+  height: 24px;
+  display: block;
+}
+
+.navbar__nav-item {
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+  text-decoration: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.navbar__nav-item:hover {
+  color: var(--color-brand-accent);
+}
+
+/* =========================================================================
+   3. STRUCTURAL INTERACTION CONTAINER (FIXED ACCUMULATION VIEWPORT BUG)
+   ========================================================================= */
+.content-container {
+  display: flex;
+  width: 100%;
+
+  /* FIXED VIEWPORT HEIGHT MATH CALCULATION FORMULA 
+     Using position: fixed + top ensures that height occupies precisely the remaining viewport space.
+     This stops the screen from creating broken scrollbar boundaries. */
+  position: fixed;
+  top: var(--navbar-height);
+  bottom: 0;
+  left: 0;
+}
+
+/* =========================================================================
+   4. THREE-COLUMN CENTRAL FEED FRAMEWORK
+   ========================================================================= */
+.left-side {
+  width: 20%;
+  max-width: 400px;
+  min-width: 260px;
+  height: 100%;
+  background-color: var(--color-surface-panel);
+  border-right: 1px solid rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Hardware-accelerated sliding transition */
+}
+
+.feed-middle {
+  flex: 1; /* Automatically scales out to swallow all remaining central track terrain */
+  height: 100%;
+  background-color: var(--color-surface-bg);
+  overflow-y: auto; /* Independent central feed scroll pathway */
+  padding: calc(var(--spacing-base) * 3);
+}
+
+.right-side {
+  width: 25%;
+  max-width: 360px;
+  min-width: 280px;
+  height: 100%;
+  background-color: var(--color-surface-panel);
+  border-left: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* =========================================================================
+   5. COMPONENT DOMAIN SPECIFIC STYLES
+   ========================================================================= */
+
+/* --- LEFT SIDEBAR (l-container & Profile) --- */
+.l-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: calc(var(--spacing-base) * 3);
+  gap: calc(
+    var(--spacing-base) * 4
+  ); /* 32px separation between profile and nav menu */
+}
+
+.l-user-info {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--spacing-base) * 2); /* 16px */
+}
+
+.l-user-image-div {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid rgba(18, 84, 190, 0.1);
+  flex-shrink: 0;
+}
+
+.l-profile-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Protects avatar dimensions from warping */
+}
+
+.l-user-detials p {
+  margin: 0;
+}
+.l-user-detials p:first-child {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--color-text-primary);
+}
+.l-user-detials p:last-child {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  margin-top: 2px;
+}
+
+.l-active-links {
+  display: flex;
+  flex-direction: column;
+  gap: calc(
+    var(--spacing-base) * 2
+  ); /* 16px spacing between navigation list elements */
+}
+
+.l-active-links a {
+  text-decoration: none;
+  color: var(--color-text-muted);
+  font-weight: 500;
+  font-size: 1rem;
+  padding: 10px 14px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.l-active-links a:hover {
+  color: var(--color-brand-accent);
+  background-color: rgba(
+    58,
+    134,
+    200,
+    0.06
+  ); /* Clean interactive highlight feedback tracking */
+}
+
+/* --- RIGHT SIDEBAR (r-container & Suggestions) --- */
+.r-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: calc(var(--spacing-base) * 3);
+  gap: calc(var(--spacing-base) * 4);
+  overflow-y: auto;
+}
+
+.r-heading {
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-text-muted);
+  margin: 0 0 calc(var(--spacing-base) * 2) 0;
+}
+
+.r-story-div {
+  display: flex;
+  gap: calc(var(--spacing-base) * 1.5);
+  overflow-x: auto;
+  padding-bottom: var(--spacing-base);
+}
+
+.r-story-div::-webkit-scrollbar {
+  height: 4px; /* Miniature custom styling scrollbars for cleaner UX visual displays */
+}
+.r-story-div::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+.r-suggestion-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.r-suggestion-container {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--spacing-base) * 2);
+  margin-bottom: calc(var(--spacing-base) * 2);
+}
+
+.s-user-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.s-user-image-div {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.s-profile-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.s-user-detials {
+  flex: 1;
+  padding-left: 12px;
+}
+.s-user-detials p {
+  margin: 0;
+}
+.s-user-detials p:first-child {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--color-text-primary);
+}
+.s-user-detials p:last-child {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin-top: 2px;
+}
+
+.s-follow-btn button {
+  background-color: rgba(58, 134, 200, 0.1);
+  color: var(--color-brand-accent);
+  border: none;
+  font-weight: 600;
+  font-size: 0.8rem;
+  padding: 6px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s ease;
+}
+
+.s-follow-btn button:hover {
+  background-color: var(--color-brand-accent);
+  color: #ffffff;
+}
+
+.s-Link {
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-brand-accent);
+  align-self: flex-start;
+  transition: opacity 0.2s ease;
+}
+.s-Link:hover {
+  opacity: 0.8;
+}
+
+/* =========================================================================
+   6. VISIBILITY TOGGLES & RESPONSIVE MEDIA QUERIES
+   ========================================================================= */
+.desktop-hidden {
+  display: none !important;
+}
+.mobile-hidden {
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .mobile-hidden {
+    display: none !important;
+  }
+  .desktop-hidden {
+    display: block !important;
+  }
+
+  .mobile-display {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Left drawer sidebar mobile transformations */
+  .left-side {
+    position: fixed;
+    left: 0;
+    top: 0; /* Align directly to top boundary coordinates */
+    padding-top: var(
+      --navbar-height
+    ); /* Drops core menu links safely below the navbar stack height */
+    z-index: 1100; /* Drops behind fixed top navbar layer (1200) */
+    width: 280px;
+    min-width: 280px;
+    height: 100%;
+    box-shadow: 16px 0 32px rgba(0, 0, 0, 0.08);
+    transform: translateX(
+      -100%
+    ); /* Slides completely out of mobile screens natively */
+  }
+
+  /* React state toggle activation hook selector */
+  .left-side.open-left-sidebar {
+    transform: translateX(0); /* Fluidly slides back into view */
+  }
+
+  .right-side {
+    display: none !important; /* Hides entire right peripheral panels on device screens */
+  }
+}
+
+/* =========================================================================
+   7. POST CARD COMPONENT FRAMEWORK
+   ========================================================================= */
+.post-card {
+  background-color: var(--color-surface-panel);
+  border-radius: 12px;
+  border: 1px solid rgba(58, 134, 200, 0.08);
+  padding: calc(var(--spacing-base) * 2.5); /* 20px interior spacing */
+  margin-bottom: calc(
+    var(--spacing-base) * 3
+  ); /* 24px layout gap between stacked cards */
+  box-shadow: 0 4px 20px rgba(18, 84, 190, 0.02);
+  display: flex;
+  flex-direction: column;
+  gap: calc(
+    var(--spacing-base) * 2
+  ); /* 16px vertical spacing between internal rows */
+}
+
+/* --- Card Header Segment --- */
+.post-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.post-card__user-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.post-card__avatar-div {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.post-card__avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.post-card__author-info p {
+  margin: 0;
+}
+
+.post-card__author-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--color-text-primary);
+}
+
+.post-card__timestamp {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin-top: 1px;
+}
+
+.post-card__more-btn {
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.2s ease;
+}
+
+.post-card__more-btn:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+  color: var(--color-brand-accent);
+}
+
+/* --- Card Body & Media Text Content --- */
+.post-card__text {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #334155; /* Neutral dark tint for optimum typography reading conditions */
+  margin: 0;
+}
+
+.post-card__media-div {
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  height: 450px; /* Use height instead of max-height to guarantee space */
+  border: 1px solid rgba(0, 0, 0, 0.03);
+  background-color: var(--color-surface-bg);
+  object-fit: cover;
+}
+
+.post-card__image,
+.post-card__vedio {
+  width: 100%;
+  height: 100%; /* Force the video to fill the 450px container */
+  object-fit: cover; /* This stops the video from stretching */
+  display: block;
+}
+/* --- Card Interactive Actions Bar --- */
+.post-card__actions {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--spacing-base) * 2.5);
+  border-top: 1px solid rgba(0, 0, 0, 0.04);
+  padding-top: calc(var(--spacing-base) * 1.5);
+  margin-top: 4px;
+}
+
+.post-card__action-btn {
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 20px;
+  transition: all 0.2s ease;
+}
+
+.post-card__action-btn .icon-nav {
+  width: 20px;
+  height: 20px;
+  stroke: var(--color-text-muted);
+  transition: stroke 0.2s ease;
+}
+
+/* Dynamic Hover Target Interactivity Matrices */
+.post-card__action-btn--like:hover {
+  color: #ef4444;
+  background-color: #fef2f2;
+}
+.post-card__action-btn--like:hover .icon-nav {
+  stroke: #ef4444;
+}
+
+.post-card__action-btn--comment:hover {
+  color: var(--color-brand-accent);
+  background-color: rgba(58, 134, 200, 0.06);
+}
+.post-card__action-btn--comment:hover .icon-nav {
+  stroke: var(--color-brand-accent);
+}
+
+.post-card__action-btn--share:hover {
+  color: #10b981;
+  background-color: #ecfdf5;
+}
+.post-card__action-btn--share:hover .icon-nav {
+  stroke: #10b981;
+}

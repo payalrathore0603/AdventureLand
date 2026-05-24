@@ -1,98 +1,120 @@
-import { useState } from "react";
-import type { PostType } from "../../types/postType";
-import { Heart } from "lucide-react";
-import { useAppDispatch } from "../../app/hook";
-import { likePost } from "../../features/posts/PostSlice";
+import { Heart, MessageCircle, MoreHorizontal, Share2 } from "lucide-react";
 
-type props = {
-  post: PostType;
-};
+// 1. Explicitly defining the structural data type blueprint shape for your props
+interface PostCardProps {
+  author_name: string;
+  avatar?: string; /* The ? means this parameter is optional */
+  timestamp: string;
+  title: string;
+  url?: string; /* Optional parameter */
+  type?: string;
+  likeCount: number;
+  comments: [];
+}
 
-export default function PostCard({ post }: props) {
-
-  const dispatch=useAppDispatch();
-  const {
-    id,
-    title,
-    description,
-    category,
-    likes,
-    isLiked,
-    isSaved,
-    user,
-    image,
-  } = post;
-
-
-  const [currentIndexImage,setCurrentIndexImage]=useState(0);
-  const [heartColor,setHeartColor]=useState("");
- 
-
-  const handleHeartClick=()=>{
-    if(heartColor==="white"){
-      setHeartColor("red")
-      dispatch(likePost(id))
-    }else{
-      setHeartColor("white")
-      dispatch(likePost(id))
-    }
-  }
-
-  const nextImage=()=>{
-    setCurrentIndexImage(prev=>prev===image.length - 1?0:prev +1)
-  }
-
-  const prevImage=()=>{
-    setCurrentIndexImage(prev=>prev===0?image.length -1:prev-1)
-  }
-
-  console.log(id, title, description, category, likes, isLiked, isSaved, user);
+// 2. Binding the interface signature type directly to your component parameters
+export default function PostCard({
+  author_name,
+  avatar,
+  timestamp,
+  title,
+  url,
+  type,
+  likeCount,
+  comments,
+}: PostCardProps) {
   return (
-    <div className=" md:w-[50%] mx-auto p-4 border-black shadow-md mb-4">
-      <div className="flex gap-4 mb-4">
-        <div className="overflow-hidden w-12 h-12 border rounded-full">
-          <img className="object-fill" src={user.avatar} alt="user profile" />
-        </div>
-        <div className="flex flex-col">
-          <span>{user.name}</span>
-          <span>{title}, {category}</span>
-        </div>
-      </div>
-
-      <div className="relative">
-         {/* current Image */}
-           <img src={image[currentIndexImage]} alt="post image"  />
-        {image.length > 1 && (
-          <button onClick={prevImage} className="absolute top-1/2 left-2 text-white">  ◀ </button>
-        )}
-         {image.length > 1 && (
-          <button onClick={nextImage} className="absolute top-1/2 right-2 text-white">   ▶ </button>
-        )}
-      </div>
-
-      <div>
-        <div className="flex justify-between">
-          <div className="flex gap-2 mt-4">
-            <Heart className={`text-sm font-medium ${heartColor === "red" ? "bg-red-500":"bg-white"} `} onClick={handleHeartClick}/>{likes}
-            <span className="text-sm font-medium">
-              <i>Comments </i>
-            </span>
-            <span className="text-sm font-medium">
-              <i>Share </i>
-            </span>
+    <article className="post-card">
+      {/* 1. Header Row Area */}
+      <div className="post-card__header">
+        <div className="post-card__user-meta">
+          <div className="post-card__avatar-div">
+            <img
+              src={
+                avatar ||
+                "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=150"
+              }
+              alt={`${author_name}'s avatar`}
+              className="post-card__avatar"
+            />
           </div>
-          <div>
-            <span className="text-sm font-medium">
-              <i>Save </i>
-            </span>
+          <div className="post-card__author-info">
+            <p className="post-card__author-name">{author_name}</p>
+            <p className="post-card__timestamp">
+              {timestamp} • @{author_name}
+            </p>
           </div>
         </div>
-        <div>
-          <span className="mt-4 font-normal text-slate-600 text-sm">
-            {description}
-          </span>
-        </div>
+        <button className="post-card__more-btn" aria-label="More post options">
+          <MoreHorizontal size={20} />
+        </button>
       </div>
-    </div>
+
+      {/* 2. Main Content Post Area */}
+      <p className="post-card__text">{title}</p>
+
+      {/* Render the structural media div ONLY if a post image source is explicitly passed down */}
+      {/* {image && (
+        <div className="post-card__media-div">
+          <img
+            src={image}
+            alt="Post attached upload media content"
+            className="post-card__image"
+          />
+        </div>
+      )} */}
+
+      {type == "img" ? (
+        <div className="post-card__media-div">
+          <img
+            src={url}
+            alt="post attached upload media content"
+            className="post-card__image"
+          />
+        </div>
+      ) : (
+        <div className="post-card__media-div">
+          <video
+            className="post-card__video"
+            key={url}
+            autoPlay
+            muted
+            loop
+            playsInline
+            crossOrigin="anonymous"
+          >
+            <source src={url}></source>
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      )}
+
+      {/* 3. Footer Interactive Actions Area */}
+      <div className="post-card__actions">
+        <button
+          type="button"
+          className="post-card__action-btn post-card__action-btn--like"
+        >
+          <Heart className="icon-nav" />
+          <span>Like {likeCount} </span>
+        </button>
+
+        <button
+          type="button"
+          className="post-card__action-btn post-card__action-btn--comment"
+        >
+          <MessageCircle className="icon-nav" />
+          <span>Comment {comments.length} </span>
+        </button>
+
+        <button
+          type="button"
+          className="post-card__action-btn post-card__action-btn--share"
+        >
+          <Share2 className="icon-nav" />
+          <span>Share</span>
+        </button>
+      </div>
+    </article>
   );
 }
