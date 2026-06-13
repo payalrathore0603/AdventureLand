@@ -9,9 +9,9 @@ import { formatDistanceToNow } from "date-fns";
 interface Post {
   _id: string;
   title: string;
-  createdAt: string; // or Date, depending on your data
+  createdAt: string;
   likeCount: number;
-  comments: []; // Replace 'any' with your actual comment type if you have one
+  comments: string[];
   userInfo: {
     name: string;
     profileImageUrl: string;
@@ -49,9 +49,7 @@ function MainLayout() {
   return (
     <>
       <div className="app-layout">
-        {/* Semantic accessibility navigation element header */}
         <nav className="navbar">
-          {/* Navbar Left Panel */}
           <div className="navbar__left">
             <button
               className="navbar__toggel-btn"
@@ -65,21 +63,17 @@ function MainLayout() {
             </div>
           </div>
 
-          {/* Navbar Right Actions Panel */}
           <div className="navbar__right">
-            {/* Social Media Link Option */}
             <div className="navbar__nav-item mobile-hidden">Social Media</div>
             <div className="navbar__mobile-icon mobile-display desktop-hidden">
               <Home className="icon-nav" />
             </div>
 
-            {/* TourGuide Link Option */}
             <div className="navbar__nav-item mobile-hidden">Tour Guide</div>
             <div className="navbar__mobile-icon mobile-display desktop-hidden">
               <UserSquare2Icon className="icon-nav" />
             </div>
 
-            {/* Package Link Option */}
             <div className="navbar__nav-item mobile-hidden">Package</div>
             <div className="navbar__mobile-icon mobile-display desktop-hidden">
               <PackageSearch className="icon-nav" />
@@ -87,7 +81,6 @@ function MainLayout() {
           </div>
         </nav>
 
-        {/* Central Workspace Grid Segment */}
         <main className="content-container">
           <aside
             className={`left-side ${openSideBar ? "open-left-sidebar" : ""}`}
@@ -96,27 +89,21 @@ function MainLayout() {
           </aside>
 
           <section className="feed-middle">
-            {/* Primary Main Application Content Stream Cards Go Here */}
-            {postList.map((post) => {
-              const media = post.postMedia?.[0];
-              console.log("media", media);
-              return (
-                <div key={post._id}>
-                  <PostCard
-                    author_name={post.userInfo.name}
-                    avatar={post.userInfo.profileImageUrl}
-                    timestamp={formatDistanceToNow(new Date(post.createdAt), {
-                      addSuffix: true,
-                    })}
-                    title={post.title}
-                    url={media?.url}
-                    type={media?.type}
-                    likeCount={post.likeCount}
-                    comments={post.comments}
-                  />
-                </div>
-              );
-            })}
+            {postList.map((post) => (
+              <div key={post._id}>
+                <PostCard
+                  author_name={post.userInfo.name}
+                  avatar={post.userInfo.profileImageUrl}
+                  timestamp={formatDistanceToNow(new Date(post.createdAt), {
+                    addSuffix: true,
+                  })}
+                  title={post.title}
+                  postMedia={post.postMedia} // 👈 Passed complete media array over here
+                  likeCount={post.likeCount}
+                  comments={post.comments}
+                />
+              </div>
+            ))}
           </section>
 
           <aside className="right-side">

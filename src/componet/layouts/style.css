@@ -18,6 +18,10 @@
   /* Layout Scale Anchors (Strict 8px Spatial Grid) */
   --navbar-height: 72px; /* 9 * 8px: Standard touch-target friendly height */
   --spacing-base: 8px; /* Modular base multiplier unit */
+  --theme-dark-bg: back;
+  --theme-dark-text: white;
+  --theme-ligth-bg: white;
+  --theme-ligth-text: black;
 }
 
 body {
@@ -414,6 +418,7 @@ body {
   gap: calc(
     var(--spacing-base) * 2
   ); /* 16px vertical spacing between internal rows */
+  position: relative;
 }
 
 /* --- Card Header Segment --- */
@@ -484,22 +489,144 @@ body {
   margin: 0;
 }
 
-.post-card__media-div {
+/* Base Layout Window Wrapper */
+.media-wrapper {
+  position: relative;
   width: 100%;
+  height: 450px;
   border-radius: 8px;
   overflow: hidden;
-  height: 450px; /* Use height instead of max-height to guarantee space */
-  border: 1px solid rgba(0, 0, 0, 0.03);
-  background-color: var(--color-surface-bg);
-  object-fit: cover;
+  background-color: #000000; /* Dark canvas backplane blocks crop gaps */
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  margin: 12px 0;
 }
 
-.post-card__image,
-.post-card__vedio {
+/* Horizontal slide channel tracking band strips */
+.media-track {
+  display: flex;
   width: 100%;
-  height: 100%; /* Force the video to fill the 450px container */
-  object-fit: cover; /* This stops the video from stretching */
+  height: 100%;
+  transition: transform 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+/* Individual Slide viewports */
+.media-slide {
+  min-width: 100%;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.video-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  cursor: pointer;
+}
+
+/* 🌟 CRITICAL FIX: object-fit: contain stops video/image cropping! */
+.responsive-media {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
   display: block;
+}
+
+/* Carousel Side Navigation Action Buttons */
+.carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(255, 255, 255, 0.85);
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 12;
+  transition:
+    background-color 0.2s,
+    opacity 0.2s;
+}
+
+.carousel-arrow:hover {
+  background-color: #ffffff;
+}
+
+.arrow-left {
+  left: 12px;
+}
+.arrow-right {
+  right: 12px;
+}
+
+/* Carousel Indicators Pagination Dots bar row */
+.carousel-dots-indicator {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 5px;
+  z-index: 10;
+  background-color: rgba(0, 0, 0, 0.3);
+  padding: 4px 8px;
+  border-radius: 12px;
+}
+
+.carousel-dots-indicator .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.45);
+  transition:
+    background-color 0.2s,
+    transform 0.2s;
+}
+
+.carousel-dots-indicator .active-dot {
+  background-color: #ffffff;
+  transform: scale(1.2);
+}
+
+/* Mute Control Overlays */
+.video-control-btn {
+  position: absolute;
+  bottom: 14px;
+  right: 14px;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: #ffffff;
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 11;
+}
+
+/* Centered static play indicator symbol block */
+.video-play-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  padding: 12px;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 /* --- Card Interactive Actions Bar --- */
 .post-card__actions {
@@ -556,4 +683,22 @@ body {
 }
 .post-card__action-btn--share:hover .icon-nav {
   stroke: #10b981;
+}
+
+/* ================
+Comment open window
+================ */
+
+/* The background container for comments */
+
+.comment-side-panel {
+  position: absolute;
+  width: 100%;
+  height: 80%;
+  background: yellow;
+  z-index: 2000;
+}
+
+.is-open {
+  transform: translateX(0);
 }
