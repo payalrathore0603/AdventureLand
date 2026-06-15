@@ -3,8 +3,9 @@ import "./style.css";
 import LeftSideBar from "./LeftSideBar";
 import { useEffect, useState } from "react";
 import RigthSideBar from "./RigthSideBar";
-import PostCard from "../pages/PostCard";
+import PostCard from "../PostCard/PostCard";
 import { formatDistanceToNow } from "date-fns";
+import type { MediaItem } from "../../types/postType/media";
 
 interface Post {
   _id: string;
@@ -16,10 +17,7 @@ interface Post {
     name: string;
     profileImageUrl: string;
   };
-  postMedia: Array<{
-    url: string;
-    type: string;
-  }>;
+  postMedia: MediaItem[];
 }
 
 function MainLayout() {

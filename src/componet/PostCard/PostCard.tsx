@@ -8,23 +8,9 @@ import {
   Heart,
   MessageCircle,
   Share2,
-  MoreHorizontal,
 } from "lucide-react";
-
-interface MediaItem {
-  url: string;
-  type: string;
-}
-
-interface PostCardProps {
-  author_name: string;
-  avatar?: string;
-  timestamp: string;
-  title: string;
-  postMedia?: MediaItem[];
-  likeCount: number;
-  comments: string[];
-}
+import type { Post } from "../../types/postType/post";
+import PostHeader from "./PostHeader";
 
 export default function PostCard({
   author_name,
@@ -34,7 +20,7 @@ export default function PostCard({
   postMedia = [],
   likeCount,
   comments,
-}: PostCardProps) {
+}: Post) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const videoRefs = useRef<Map<number, HTMLVideoElement>>(new Map());
 
@@ -46,7 +32,7 @@ export default function PostCard({
   const [isLike, setIsLike] = useState(false);
   const [newLikeCount, setNewLikeCount] = useState(likeCount);
   const [showComment, setShowComment] = useState(false);
-  const [newComment, setnewComment] = useState("");
+  // const [newComment, setnewComment] = useState("");
 
   function handlePauseAllVideos() {
     videoRefs.current.forEach((video) => video.pause());
@@ -54,7 +40,14 @@ export default function PostCard({
   }
 
   function handlePlayCurrentSlide(index: number) {
+    const media = postMedia[index];
+
+    if (!media || (media.type !== "video" && media.type !== "mp4")) {
+      return;
+    }
+
     handlePauseAllVideos();
+
     const activeVideo = videoRefs.current.get(index);
     if (activeVideo) {
       activeVideo
@@ -66,7 +59,7 @@ export default function PostCard({
 
   useEffect(() => {
     if (postMedia.length === 0 || !containerRef.current) return;
-
+    // console.log("containerRef.current", containerRef.current);
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -139,29 +132,11 @@ export default function PostCard({
     >
       {/* LEFT COLUMN: Main Post Content & Controls */}
       <div className="post-main-content">
-        <div className="post-card__header">
-          <div className="post-card__user-meta">
-            <div className="post-card__avatar-div">
-              <img
-                src={
-                  avatar ||
-                  "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=150"
-                }
-                alt={`${author_name}'s avatar`}
-                className="post-card__avatar"
-              />
-            </div>
-            <div className="post-card__author-info">
-              <p className="post-card__author-name">{author_name}</p>
-              <p className="post-card__timestamp">
-                {timestamp} • @{author_name.toLowerCase().replace(/\s+/g, "")}
-              </p>
-            </div>
-          </div>
-          <button className="post-card__more-btn" aria-label="More options">
-            <MoreHorizontal size={20} />
-          </button>
-        </div>
+        <PostHeader
+          author_name={author_name}
+          avatar={avatar}
+          timestamp={timestamp}
+        />
 
         <p className="post-card__text">{title}</p>
 
@@ -248,6 +223,7 @@ export default function PostCard({
         )}
 
         {/* Global Post Action Matrix Buttons Row */}
+        {/* ------------ */}
         <div className="post-card__actions">
           <button
             type="button"
@@ -281,52 +257,24 @@ export default function PostCard({
             <span className="mobile-hidden">Share</span>
           </button>
         </div>
+        {/* ----------------- */}
       </div>
 
       {/* RIGHT COLUMN (DESKTOP) / BOTTOM SHEET (MOBILE): Balanced Content Panel */}
-      {showComment && (
-        <aside className="comment-side-panel">
-          <div className="panel-header">
-            <div className="mobile-handle"></div>
-            <span>Comments</span>
-            <button
-              className="close-panel"
-              onClick={() => setShowComment(false)}
-            >
-              ✕
-            </button>
-          </div>
-
-          <div className="panel-comments-list">
-            {comments && comments.length > 0 ? (
-              comments.map((c, i) => (
-                <div key={i} className="comment-item">
-                  <strong>User_{i}</strong> {c}
-                </div>
-              ))
-            ) : (
-              <p className="no-comment">No comments yet.</p>
-            )}
-          </div>
-
-          <div className="panel-input-area">
-            <input
-              value={newComment}
-              onChange={(e) => setnewComment(e.target.value)}
-              placeholder="Add a comment..."
-            />
-            <button disabled={!newComment.trim()}>Post</button>
-          </div>
-        </aside>
-      )}
-
-      {/* Mobile-only context overlay backdrop shield blur mask */}
-      {showComment && (
-        <div
-          className="mobile-overlay-dim"
-          onClick={() => setShowComment(false)}
-        ></div>
-      )}
+      {/* INSTAGRAM-STYLE COMMENT MODAL */}
+      {/* {showComment && (<CommentBox  
+          author_name={author_name}
+          avatar={avatar}
+          timestamp={timestamp}
+          title={title}
+          postMedia={postMedia}
+          currentSlide={currentSlide}
+          comments={comments}
+          likeCount={newLikeCount}
+          isLike={isLike}
+          onLikeToggle={handlelike}
+          onClose={() => setShowComment(false)}
+        /> )} */}
     </article>
   );
 }
