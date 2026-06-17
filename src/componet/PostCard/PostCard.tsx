@@ -1,16 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import {
-  Volume2,
-  VolumeX,
-  Play,
-  ChevronLeft,
-  ChevronRight,
-  Heart,
-  MessageCircle,
-  Share2,
-} from "lucide-react";
 import type { Post } from "../../types/postType/post";
 import PostHeader from "./PostHeader";
+import PostActions from "./PostActions";
+import PostMediaVedio from "./PostMediaVedio";
+import CommentBox from "./CommentBox";
 
 export default function PostCard({
   author_name,
@@ -32,7 +25,6 @@ export default function PostCard({
   const [isLike, setIsLike] = useState(false);
   const [newLikeCount, setNewLikeCount] = useState(likeCount);
   const [showComment, setShowComment] = useState(false);
-  // const [newComment, setnewComment] = useState("");
 
   function handlePauseAllVideos() {
     videoRefs.current.forEach((video) => video.pause());
@@ -141,128 +133,35 @@ export default function PostCard({
         <p className="post-card__text">{title}</p>
 
         {postMedia.length > 0 && (
-          <div className="media-wrapper">
-            {currentSlide > 0 && (
-              <button className="carousel-arrow arrow-left" onClick={slideLeft}>
-                <ChevronLeft size={20} />
-              </button>
-            )}
-            {currentSlide < postMedia.length - 1 && (
-              <button
-                className="carousel-arrow arrow-right"
-                onClick={slideRight}
-              >
-                <ChevronRight size={20} />
-              </button>
-            )}
-
-            <div
-              className="media-track"
-              style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-            >
-              {postMedia.map((media, index) => (
-                <div key={index} className="media-slide">
-                  {media.type === "img" || media.type === "image" ? (
-                    <img
-                      src={media.url}
-                      alt="Uploaded post element attachment"
-                      className="responsive-media"
-                    />
-                  ) : (
-                    <div
-                      className="video-container"
-                      onClick={() => togglePlayPause(index)}
-                    >
-                      <video
-                        ref={(el) => {
-                          if (el) videoRefs.current.set(index, el);
-                          else videoRefs.current.delete(index);
-                        }}
-                        className="responsive-media"
-                        loop
-                        playsInline
-                        muted={isMuted}
-                        crossOrigin="anonymous"
-                      >
-                        <source src={media.url} />
-                      </video>
-
-                      <button
-                        className="video-control-btn mute-btn"
-                        onClick={toggleMute}
-                      >
-                        {isMuted ? (
-                          <VolumeX size={16} />
-                        ) : (
-                          <Volume2 size={16} />
-                        )}
-                      </button>
-
-                      {playingVideoIndex !== index && (
-                        <div className="video-play-overlay">
-                          <Play size={32} fill="white" color="white" />
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-
-            {postMedia.length > 1 && (
-              <div className="carousel-dots-indicator">
-                {postMedia.map((_, index) => (
-                  <span
-                    key={index}
-                    className={`dot ${currentSlide === index ? "active-dot" : ""}`}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
+          <PostMediaVedio
+            postMedia={postMedia}
+            currentSlide={currentSlide}
+            onSlideLeft={slideLeft}
+            onSlideRight={slideRight}
+            onTogglePlayPause={togglePlayPause}
+            videoRefs={videoRefs}
+            isMuted={isMuted}
+            onToggleMute={toggleMute}
+            playingVideoIndex={playingVideoIndex}
+          />
         )}
 
         {/* Global Post Action Matrix Buttons Row */}
         {/* ------------ */}
-        <div className="post-card__actions">
-          <button
-            type="button"
-            className="post-card__action-btn post-card__action-btn--like"
-            onClick={handlelike}
-          >
-            <Heart
-              className="icon-nav"
-              color={isLike ? "#ed4956" : "currentColor"}
-              fill={isLike ? "#ed4956" : "none"}
-            />
-            <span className="mobile-hidden">Like</span>
-            <span>{newLikeCount}</span>
-          </button>
-
-          <button
-            type="button"
-            className="post-card__action-btn post-card__action-btn--comment"
-            onClick={() => setShowComment((prev) => !prev)}
-          >
-            <MessageCircle className="icon-nav" />
-            <span className="mobile-hidden">Comment</span>
-            <span>{comments?.length || 0}</span>
-          </button>
-
-          <button
-            type="button"
-            className="post-card__action-btn post-card__action-btn--share"
-          >
-            <Share2 className="icon-nav" />
-            <span className="mobile-hidden">Share</span>
-          </button>
-        </div>
+        <PostActions
+          isLike={isLike}
+          commentCount={comments.length || 0}
+          likeCount={newLikeCount}
+          onLike={handlelike}
+          onComment={() => setShowComment((prev) => !prev)}
+        />
         {/* ----------------- */}
       </div>
 
       {/* RIGHT COLUMN (DESKTOP) / BOTTOM SHEET (MOBILE): Balanced Content Panel */}
       {/* INSTAGRAM-STYLE COMMENT MODAL */}
-      {/* {showComment && (<CommentBox  
+      {showComment && (
+        <CommentBox
           author_name={author_name}
           avatar={avatar}
           timestamp={timestamp}
@@ -274,7 +173,8 @@ export default function PostCard({
           isLike={isLike}
           onLikeToggle={handlelike}
           onClose={() => setShowComment(false)}
-        /> )} */}
+        />
+      )}
     </article>
   );
 }

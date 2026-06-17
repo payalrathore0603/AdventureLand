@@ -1,15 +1,38 @@
 import { X, Heart, MessageCircle, Share2 } from "lucide-react";
-import React from "react";
+import type { MediaItem } from "../../types/postType/media";
 
-export default function CommentBox() {
+interface PostcommentProps {
+  onClose: () => void;
+  postMedia: MediaItem[];
+  currentSlide: number;
+  author_name: string;
+  avatar?: string;
+  comments: string[];
+  title: string;
+  isLike: boolean;
+  onLikeToggle: () => void;
+  likeCount: number;
+  timestamp: string;
+}
+
+export default function CommentBox({
+  onClose,
+  postMedia,
+  currentSlide,
+  author_name,
+  avatar,
+  comments,
+  title,
+  isLike,
+  onLikeToggle,
+  likeCount,
+  timestamp,
+}: PostcommentProps) {
   return (
     <div>
-      <div className="comment-overlay" onClick={() => setShowComment(false)}>
+      <div className="comment-overlay" onClick={onClose}>
         {/* Global close button outside the modal */}
-        <button
-          className="comment-global-close"
-          onClick={() => setShowComment(false)}
-        >
+        <button className="comment-global-close" onClick={onClose}>
           <X size={24} color="white" />
         </button>
 
@@ -114,12 +137,12 @@ export default function CommentBox() {
                   className="pointer"
                   color={isLike ? "#ed4956" : "currentColor"}
                   fill={isLike ? "#ed4956" : "none"}
-                  onClick={handlelike}
+                  onClick={onLikeToggle}
                 />
                 <MessageCircle size={22} />
                 <Share2 size={22} />
               </div>
-              <p className="comment-likes-count">{newLikeCount} likes</p>
+              <p className="comment-likes-count">{likeCount} likes</p>
               <p className="comment-timestamp-muted">{timestamp}</p>
 
               <form
