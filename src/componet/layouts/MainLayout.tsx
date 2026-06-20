@@ -1,4 +1,10 @@
-import { Home, MenuIcon, PackageSearch, UserSquare2Icon } from "lucide-react";
+import {
+  Home,
+  MenuIcon,
+  PackageSearch,
+  User,
+  UserSquare2Icon,
+} from "lucide-react";
 import "./style.css";
 import LeftSideBar from "./LeftSideBar";
 import { useEffect, useState } from "react";
@@ -6,13 +12,15 @@ import RigthSideBar from "./RigthSideBar";
 import PostCard from "../PostCard/PostCard";
 import { formatDistanceToNow } from "date-fns";
 import type { MediaItem } from "../../types/postType/media";
+import type { commentProps } from "../../types/postType/post";
+import { Link } from "react-router-dom";
 
 interface Post {
   _id: string;
   title: string;
   createdAt: string;
   likeCount: number;
-  comments: string[];
+  comments: commentProps[];
   userInfo: {
     name: string;
     profileImageUrl: string;
@@ -75,6 +83,12 @@ function MainLayout() {
             <div className="navbar__nav-item mobile-hidden">Package</div>
             <div className="navbar__mobile-icon mobile-display desktop-hidden">
               <PackageSearch className="icon-nav" />
+            </div>
+            <Link to="/login" className="navbar__nav-item mobile-hidden">
+              Login
+            </Link>
+            <div className="navbar__mobile-icon mobile-display desktop-hidden">
+              <User className="icon-nav" />
             </div>
           </div>
         </nav>
