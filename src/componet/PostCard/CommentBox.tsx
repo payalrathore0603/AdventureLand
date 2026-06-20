@@ -1,15 +1,40 @@
 import { X, Heart, MessageCircle, Share2 } from "lucide-react";
-import React from "react";
+import type { MediaItem } from "../../types/postType/media";
+import type { commentProps } from "../../types/postType/post";
+import { getTimeAgo } from "../../utility/date";
 
-export default function CommentBox() {
+interface PostcommentProps {
+  onClose: () => void;
+  postMedia: MediaItem[];
+  currentSlide: number;
+  author_name: string;
+  avatar?: string;
+  comments: commentProps[];
+  title: string;
+  isLike: boolean;
+  onLikeToggle: () => void;
+  likeCount: number;
+  timestamp: string;
+}
+
+export default function CommentBox({
+  onClose,
+  postMedia,
+  currentSlide,
+  author_name,
+  avatar,
+  comments,
+  title,
+  isLike,
+  onLikeToggle,
+  likeCount,
+}: PostcommentProps) {
+  const handleComment = () => {};
   return (
     <div>
-      <div className="comment-overlay" onClick={() => setShowComment(false)}>
+      <div className="comment-overlay" onClick={onClose}>
         {/* Global close button outside the modal */}
-        <button
-          className="comment-global-close"
-          onClick={() => setShowComment(false)}
-        >
+        <button className="comment-global-close" onClick={onClose}>
           <X size={24} color="white" />
         </button>
 
@@ -59,6 +84,7 @@ export default function CommentBox() {
                 <p className="comment-pane-username">{author_name}</p>
                 <p className="comment-pane-subtitle">
                   @{author_name.toLowerCase().replace(/\s+/g, "")}
+                  {title}
                 </p>
               </div>
             </div>
@@ -66,25 +92,11 @@ export default function CommentBox() {
             {/* 2. Scrollable Thread Area */}
             <div className="comment-pane-thread">
               {/* Post Caption (Always stays at the top of the thread) */}
-              <div className="comment-thread-item">
-                <img
-                  src={
-                    avatar ||
-                    "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=150"
-                  }
-                  alt={author_name}
-                  className="comment-pane-avatar"
-                />
-                <p className="comment-thread-text">
-                  <span className="comment-bold-user">{author_name}</span>{" "}
-                  {title}
-                </p>
-              </div>
 
               {/* Dynamic Map of Comments */}
               {comments && comments.length > 0 ? (
-                comments.map((comment, index) => (
-                  <div key={index} className="comment-thread-item">
+                comments.map((comment) => (
+                  <div key={comment._id} className="comment-thread-item">
                     <img
                       src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=150"
                       alt="User avatar"
@@ -92,9 +104,12 @@ export default function CommentBox() {
                     />
                     <p className="comment-thread-text">
                       <span className="comment-bold-user">
-                        user_{index + 1}
-                      </span>{" "}
-                      {comment}
+                        {comment.userInfo.name}
+                      </span>
+                      <span className="commment">{comment.comment}</span>
+                      <span>
+                        <i>{getTimeAgo(comment.timeStamp)}</i>
+                      </span>
                     </p>
                   </div>
                 ))
@@ -114,20 +129,21 @@ export default function CommentBox() {
                   className="pointer"
                   color={isLike ? "#ed4956" : "currentColor"}
                   fill={isLike ? "#ed4956" : "none"}
-                  onClick={handlelike}
+                  onClick={onLikeToggle}
                 />
                 <MessageCircle size={22} />
                 <Share2 size={22} />
               </div>
-              <p className="comment-likes-count">{newLikeCount} likes</p>
-              <p className="comment-timestamp-muted">{timestamp}</p>
+              <p className="comment-likes-count">{likeCount} likes</p>
 
               <form
                 className="comment-input-form"
                 onSubmit={(e) => e.preventDefault()}
               >
                 <input type="text" placeholder="Add a comment..." />
-                <button type="submit">Post</button>
+                <button type="submit" onClick={handleComment}>
+                  Post
+                </button>
               </form>
             </div>
           </div>

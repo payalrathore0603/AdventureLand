@@ -7,5 +7,19 @@ export interface Post{
     title:string;
     postMedia?:MediaItem[];
     likeCount:number;
-    comments:string[]
+    comments:commentProps[]
+}
+
+
+export interface commentProps {
+  _id: number;
+  userId: string;
+  comment: string;
+  timeStamp: string;
+  likes: number[];
+  dislikes: number[];
+  userInfo: {
+    name: string;
+    profileImageUrl: string;
+  };
 }
