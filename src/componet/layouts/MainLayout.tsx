@@ -13,7 +13,7 @@ import PostCard from "../PostCard/PostCard";
 import { formatDistanceToNow } from "date-fns";
 import type { MediaItem } from "../../types/postType/media";
 import type { commentProps } from "../../types/postType/post";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 interface Post {
   _id: string;
@@ -28,12 +28,29 @@ interface Post {
   postMedia: MediaItem[];
 }
 
+interface User {
+  coverImage: string;
+  email: string;
+  id: string;
+  name: string;
+  phone: string;
+  profileImage: string;
+}
+
 function MainLayout() {
   const [openSideBar, setOpenSideBar] = useState(false);
   const [postList, setPostList] = useState<Post[]>([]);
-
+  const storeUser = localStorage.getItem("user");
+  const user: User | null = storeUser ? JSON.parse(storeUser) : null;
+  const navigate = useNavigate();
   const handleMenuClick = () => {
     setOpenSideBar((prev) => !prev);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/");
   };
 
   useEffect(() => {
@@ -85,8 +102,18 @@ function MainLayout() {
               <PackageSearch className="icon-nav" />
             </div>
             <Link to="/login" className="navbar__nav-item mobile-hidden">
-              Login
+              {user?.name ? `${user?.name}` : "LogIn"}
             </Link>
+
+            {user?.name && (
+              <button
+                className="navbar__nav-item mobile-hidden"
+                onClick={handleLogout}
+              >
+                Logout
+              </button>
+            )}
+
             <div className="navbar__mobile-icon mobile-display desktop-hidden">
               <User className="icon-nav" />
             </div>

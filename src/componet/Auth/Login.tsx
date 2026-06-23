@@ -1,41 +1,51 @@
-import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
 import axios from "axios";
 import { fetchBaseApi } from "../../utility/api";
-
-interface userProps {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  profileImage: string;
-  coverImage: string;
-}
+import { GoogleLogin } from "@react-oauth/google";
 
 interface userInfoProps {
-  token: string;
-  user: userProps;
+  email: string;
+  password: string;
 }
 
 export default function Login() {
-  const [userInfo, setUserInfo] = useState<userInfoProps>();
+  const [userInfo, setUserInfo] = useState<userInfoProps>({
+    email: "",
+    password: "",
+  });
+  const navigate = useNavigate();
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUserInfo((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
 
-  useEffect(() => {
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
     const fetchResponse = async () => {
       try {
         const response = await axios.post(`${fetchBaseApi()}/api/auth/login`, {
-          email: "payalrathore0603@gamil.com",
-          password: "12345678",
+          email: userInfo.email,
+          password: userInfo.password,
         });
-        // console.log(response.data);
-        setUserInfo(response.data);
-        console.log(response.status);
+        // console.log(response.status);
+        const { token, user } = response.data;
+        localStorage.setItem("token", token);
+        localStorage.setItem("user", JSON.stringify(user));
+
+        if (response.status == 200) {
+          navigate("/");
+        }
       } catch (err) {
         console.log(err);
       }
     };
     fetchResponse();
-  }, []);
+    console.log("userInfo", userInfo);
+  };
 
   return (
     <div className="login-container">
@@ -54,9 +64,25 @@ export default function Login() {
         <h1 className="heading">Login to AdventureLand </h1>
         <div className="">
           <form action="" className="login-form">
-            <input className="input-feild" type="text" placeholder="Email" />
-            <input className="input-feild" type="text" placeholder="Password" />
-            <button className="input-feild button-field">Login</button>
+            <input
+              className="input-feild"
+              type="text"
+              placeholder="Email"
+              value={userInfo?.email || ""}
+              name="email"
+              onChange={handleChange}
+            />
+            <input
+              className="input-feild"
+              type="text"
+              placeholder="Password"
+              name="password"
+              value={userInfo.password}
+              onChange={handleChange}
+            />
+            <button className="input-feild button-field" onClick={handleClick}>
+              Login
+            </button>
           </form>
         </div>
         <div className="">
@@ -64,8 +90,19 @@ export default function Login() {
         </div>
         <div className="login-Social">
           <button className="input-feild button-field">
-            {" "}
-            Login with Facebook{" "}
+            Login with Facebook
+          </button>
+          <GoogleLogin
+            onSuccess={(response) => {
+              console.log("response", response);
+              navigate("/");
+            }}
+            onError={() => {
+              console.log("Login Failed");
+            }}
+          />
+          <button className="input-feild button-field">
+            Login with Google
           </button>
           <button className="input-feild button-field">
             <Link to="/signup">Create an account</Link>

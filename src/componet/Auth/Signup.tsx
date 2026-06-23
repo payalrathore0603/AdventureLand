@@ -4,20 +4,18 @@ import Select from "react-select";
 import { useState } from "react";
 
 export default function Signup() {
+  const [selectedCountry, setSelectedCountry] = useState("");
+  const [selectedState, setSelectedState] = useState("");
+  const [selectedCity, setSelectedCity] = useState("");
+
   const countries = Country.getAllCountries().map((country) => ({
     value: country.isoCode,
     label: `${country.flag} ${country.name} `,
   }));
-
-  const [selectedCountry, setSelectedCountry] = useState("");
-
   const states = State.getStatesOfCountry(selectedCountry).map((state) => ({
     value: state.isoCode,
     label: state.name,
   }));
-
-  const [selectedState, setSelectedState] = useState("");
-
   const cities = City.getCitiesOfState(selectedCountry, selectedState).map(
     (city) => ({
       value: city.name,
@@ -25,9 +23,16 @@ export default function Signup() {
     }),
   );
 
-  const [selectedCity, setSelectedCity] = useState("");
+  const selectedCountryOption =
+    countries.find((country) => country.value === selectedCountry) || null;
 
-  //   console.log(Cities);
+  const selectedStateOption =
+    states.find((state) => state.value === selectedState) || null;
+
+  const selectedCityOption =
+    cities.find((city) => city.value === selectedCity) || null;
+
+  console.log(selectedCity);
 
   //   console.log(States);
 
@@ -68,6 +73,7 @@ export default function Signup() {
                   options={countries}
                   placeholder="Serach Country"
                   isSearchable
+                  value={selectedCountryOption}
                   onChange={(option) => {
                     setSelectedCountry(option?.value || "");
                     setSelectedState("");
@@ -83,6 +89,7 @@ export default function Signup() {
                   placeholder="Serach State"
                   isDisabled={!selectedCountry}
                   isSearchable
+                  value={selectedStateOption}
                   onChange={(option) => {
                     setSelectedState(option?.value || "");
                     setSelectedCity("");
@@ -93,6 +100,7 @@ export default function Signup() {
                   classNamePrefix="country"
                   options={cities}
                   placeholder="Serach City"
+                  value={selectedCityOption}
                   isDisabled={!selectedState}
                   isSearchable
                   onChange={(option) => setSelectedCity(option?.value || "")}
