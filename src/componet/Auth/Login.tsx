@@ -27,7 +27,7 @@ export default function Login() {
 
     const fetchResponse = async () => {
       try {
-        const response = await axios.post(`${fetchBaseApi()}/api/auth/login`, {
+        const response = await axios.post(`${fetchBaseApi}/api/auth/login`, {
           email: userInfo.email,
           password: userInfo.password,
         });

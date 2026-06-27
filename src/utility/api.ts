@@ -1,13 +1,11 @@
 import axios from "axios";
 
 
-export function fetchBaseApi(){
-    const api= 'https://adventureland2-de6qaz57hq-uc.a.run.app';
-    return api;
-}
 
+ export  const fetchBaseApi= 'https://adventureland2-de6qaz57hq-uc.a.run.app';
+   
  const api=axios.create({
-    baseURL:fetchBaseApi()
+    baseURL:fetchBaseApi
 })
 
 api.interceptors.request.use((config)=>{
